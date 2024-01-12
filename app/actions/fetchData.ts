@@ -26,6 +26,7 @@ export type photo={
 
 
 export async function fetchList (){
+    revalidatePath('/')
     try{
         const response = await unsplash.photos.getRandom({count: 10})
         if (response.errors){
@@ -38,7 +39,6 @@ export async function fetchList (){
         return console.error ('Error: ' + error)
     }
     finally{
-        revalidatePath('/*')
         revalidatePath('/')
     }
 }
