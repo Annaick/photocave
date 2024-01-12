@@ -56,14 +56,14 @@ export default function Page() {
   return (<main className="p-4">
     <Searchbar></Searchbar>
     <ul>
-      {items.map((i:Random|undefined)=>{
+      {items.map((i:Random|undefined, index)=>{
         if (i){
           return <li className="mb-6" key={i.id}>
           <Photocard authorName={i.user.name} photoTitle={i.alt_description? i.alt_description.toString(): ''} url={i.urls.small} key={i.id} avatar={i.user.profile_image.small}></Photocard>
           </li>
         }else{
+          return <p key={index} className="text-center">Misy blem an! mbola tsisy mesure mipetraka fa ndana ataovy reload le page</p>
         }
-        return <p className="text-center">Misy blem an! mbola tsisy mesure mipetraka fa ndana ataovy reload le page</p>
       })}
     </ul>
     {isLoading && <div className="flex justify-center"><Spinner className="mx-auto"></Spinner></div>}
