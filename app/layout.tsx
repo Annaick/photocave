@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Providers } from './provider'
 import './globals.css'
+
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from '@nextui-org/react'
+import { IconBrandGithub, IconSun } from '@tabler/icons-react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,8 +19,25 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className='light'>
+      <body className={inter.className}>
+          <Navbar>
+            <NavbarBrand>
+              .photocave
+            </NavbarBrand>
+            <NavbarContent className='justify-end'>
+              <NavbarItem className='ml-auto'>
+                <Button radius='full' isIconOnly aria-label='Go to github' variant='light'><IconBrandGithub></IconBrandGithub></Button>
+              </NavbarItem>
+              <NavbarItem>
+                <Button radius='full' isIconOnly aria-label='Switch theme' variant='light'><IconSun></IconSun></Button>
+              </NavbarItem>
+            </NavbarContent>
+          </Navbar>
+          <Providers>
+            {children}
+          </Providers>
+      </body>
     </html>
   )
 }
