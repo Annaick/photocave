@@ -42,3 +42,11 @@ export async function fetchList (){
         revalidatePath('/')
     }
 }
+
+export async function triggerDownload (url: string) {
+    try{
+        await unsplash.photos.trackDownload({downloadLocation: url})
+    }catch (err){
+        console.error(err)
+    }
+}

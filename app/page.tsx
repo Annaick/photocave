@@ -59,7 +59,7 @@ export default function Page() {
       {items.map((i:Random|undefined, index)=>{
         if (i){
           return <li className="mb-6" key={i.id}>
-          <Photocard authorName={i.user.name} photoTitle={i.alt_description? i.alt_description.toString(): ''} url={i.urls.small} key={i.id} avatar={i.user.profile_image.small}></Photocard>
+          <Photocard photo={i}></Photocard>
           </li>
         }else{
           return <p key={index} className="text-center">Misy blem an! mbola tsisy mesure mipetraka fa ndana ataovy reload le page</p>
