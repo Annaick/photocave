@@ -22,7 +22,8 @@
     "react-dom": "^18",
     "react-infinite-scroller": "^1.2.6",
     "string-to-color": "^2.2.2",
-    "unsplash-js": "^7.0.19"
+    "unsplash-js": "^7.0.19",
+    "use-debounce": "^10.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
