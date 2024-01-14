@@ -7,9 +7,10 @@ import './globals.css'
 
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Link } from '@nextui-org/react'
 import { IconBrandGithub, IconMoon, IconSun } from '@tabler/icons-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
+
 
 export default function RootLayout({
   children,
@@ -17,10 +18,28 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
-  const [darkMode, setDarkMode] = useState (false)
+  const [locale] = useState ((): boolean =>{
+    if (typeof window != "undefined"){
+      let save = localStorage.getItem ('darkMode')
+      if (save == null || save == undefined){
+        return false
+      }
+      return JSON.parse(save)
+    }
+    return false
+  })
+  const [darkMode, setDarkMode] = useState (locale)
+  const [selectedMode, setSelectedMode] = useState<boolean>()
+
+
+
+  useEffect (()=>{
+    window.localStorage.setItem('darkMode', JSON.stringify(darkMode))
+    setSelectedMode(darkMode)
+  }, [locale, darkMode])
 
   return (
-    <html lang="en" className={darkMode?'dark' :'light'}>
+    <html lang="en" className={selectedMode?'dark' :'light'}>
       <body className={inter.className}>
           <Navbar>
             <NavbarBrand>
@@ -32,7 +51,7 @@ export default function RootLayout({
               </NavbarItem>
               <NavbarItem>
                 <Button onClick={()=>{setDarkMode(!darkMode)}} radius='full' isIconOnly aria-label='Switch theme' variant='light'>
-                  {darkMode?<IconMoon></IconMoon>: <IconSun></IconSun>}
+                  {selectedMode?<IconMoon></IconMoon>: <IconSun></IconSun>}
                 </Button>
               </NavbarItem>
             </NavbarContent>

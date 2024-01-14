@@ -4,36 +4,31 @@ import {  IconChevronDown } from "@tabler/icons-react"
 import { Random } from "unsplash-js/dist/methods/photos/types"
 import { triggerDownload } from "../actions/fetchData"
 import { useEffect, useState } from "react"
-import Link from "next/link"
-import { saveAs } from 'file-saver'
+import { download } from "../actions/download"
 
 const tsc = require ('string-to-color')
 const capitalize = (string: string)=> string[0].toUpperCase() + string.slice(1)
 
 
 export function Photocard (props:{photo:Random}){
+    const [loading, setLoading] = useState (false)
     const [option, setOption] = useState(['0'])
+    const [url, setUrl] = useState (props.photo.urls.full)
+
     const urls = [
         props.photo.urls.full,
         props.photo.urls.regular,
-        props.photo.urls.small
+        props.photo.urls.small,
     ]
-
     async function downloadPhoto(){
-        try{
-            const name = props.photo.alt_description?.split(' ').slice(0, 3).join('-') + '.jpg'
-            const url = urls[Number.parseInt(option[0])]
-            alert (name + ' downloading...')
-            saveAs(url, name)
-            await triggerDownload(props.photo.links.download_location)
-        }catch (err){
-            console.error (err)
-        }
-    }
+        setLoading (true)
+        const name = props.photo.alt_description?.split(' ').slice(0, 3).join('-') + '.jpg'
+        const url = urls[Number.parseInt(option[0])]
 
+        await download (name, url)
+        await triggerDownload (props.photo.links.download_location)
 
-    function handleOption(e: any){
-        setOption(e)
+        setLoading (false)
     }
 
     return(<Card className="max-w-[400px] mx-auto">
@@ -44,13 +39,13 @@ export function Photocard (props:{photo:Random}){
                 <p className="text-xs">by <span className="underline">{props.photo.user.name}</span></p>
                 
             </div>
-            <Image src={props.photo.urls.small} alt={props.photo.alt_description? props.photo.alt_description: ''}></Image>
+            <Image fetchPriority="high" src={props.photo.urls.small} alt={props.photo.alt_description? props.photo.alt_description: ''}></Image>
         </CardHeader>
         <CardBody>
             <h1 className="mb-4">{capitalize(props.photo.alt_description? props.photo.alt_description: '')}</h1>
             <section className="flex flex-col gap-4">
-                <ButtonGroup color="primary" className="justify-start">
-                <Button onClick={downloadPhoto}>Download</Button>
+                <ButtonGroup isDisabled={loading} color="primary" className="justify-start">
+                <Button isLoading={loading} onClick={downloadPhoto}>Download</Button>
                     <Dropdown>
                         <DropdownTrigger>
                             <Button isIconOnly>
@@ -63,16 +58,15 @@ export function Photocard (props:{photo:Random}){
                             aria-label="Size options"
                             selectedKeys={option}
                             selectionMode="single"
-                            onSelectionChange={handleOption}
                             className="max-w-[300px]"
                         >
-                            <DropdownItem key={'0'}>
+                            <DropdownItem key={'0'} onClick={()=>{setOption(['0'])}}>
                                 Large
                             </DropdownItem>
-                            <DropdownItem key={'1'}>
+                            <DropdownItem key={'1'} onClick={()=>{setOption(['1'])}}>
                                 Medium
                             </DropdownItem>
-                            <DropdownItem key={'2'}>
+                            <DropdownItem key={'2'} onClick={()=>{setOption(['2'])}}>
                                 Small
                             </DropdownItem>
                         </DropdownMenu>

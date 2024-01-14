@@ -13,6 +13,7 @@
     "@tabler/icons-react": "^2.45.0",
     "@types/file-saver": "^2.0.7",
     "@types/react-infinite-scroller": "^1.2.5",
+    "axios": "^1.6.5",
     "file-saver": "^2.0.5",
     "framer-motion": "^10.18.0",
     "next": "14.0.4",

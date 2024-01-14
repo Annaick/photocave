@@ -4,7 +4,6 @@ import { cp } from "fs"
 import { createApi } from "unsplash-js"
 import { revalidatePath } from "next/cache"
 import { Photos } from "unsplash-js/dist/methods/search/types/response"
-import { Random } from "unsplash-js/dist/methods/photos/types"
 
 let accessKey: string = process.env.ACCESS_KEY? process.env.ACCESS_KEY: ''
 const unsplash = createApi({
@@ -25,10 +24,10 @@ export type photo={
 
 
 
-export async function fetchList (){
+export async function fetchList (query?: string){
     revalidatePath('/')
     try{
-        const response = await unsplash.photos.getRandom({count: 10})
+        const response = await unsplash.photos.getRandom({count: 10, query: query })
         if (response.errors){
             throw new Error (response.errors[0])
         }else{
@@ -36,7 +35,7 @@ export async function fetchList (){
             return data;
         }
     }catch (error){
-        return console.error ('Error: ' + error)
+        return new Error ('Error: ' + error)
     }
     finally{
         revalidatePath('/')

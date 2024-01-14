@@ -4,36 +4,43 @@ import { useCallback, useEffect, useState } from "react"
 import { Searchbar } from "./ui/searchbar"
 import { Photocard } from "./ui/card"
 import { Button, Spinner } from "@nextui-org/react" 
-import { fetchList, type photo } from "./actions/fetchData"
+import { fetchList } from "./actions/fetchData"
 import { Random } from "unsplash-js/dist/methods/photos/types"
-import { IconArrowBackUp } from "@tabler/icons-react"
+import { IconRotate } from "@tabler/icons-react"
+import { SearchParams } from "unsplash-js/dist/methods/search"
+import { useSearchParams } from "next/navigation"
+
 
 export default function Page() {
   const [items, setItems] = useState ([])
   const [isLoading, setIsLoading] = useState (false)
   const [error, setError] = useState (false)
-  const [index, setIndex] = useState (3)
+  const [index, setIndex] = useState (1)
+
+  const searchParams = useSearchParams()
 
 
   const fetchData = useCallback(async()=>{
+    const search = searchParams.get('query') || undefined
     if (isLoading) return;
     setIsLoading(true)
 
-    let images: any = await fetchList()
+    let images: any = await fetchList(search).catch (()=>{setError(true)})
     console.log (images)
     setItems(items.concat(images))
     setIndex(index + 1)
     setIsLoading(false)
   }, [index, isLoading])
 
+  const getData = async ()=>{
+    const search = searchParams.get('query') || undefined
+    setIsLoading (true)
+    let images: any = await fetchList(search).catch (()=>{setError(true)})
+    setItems(items.concat(images))
+    setIsLoading(false)
+  }
 
-  useEffect(()=>{
-    const getData = async ()=>{
-      setIsLoading (true)
-      let images: any = await fetchList()
-      setItems(items.concat(images))
-      setIsLoading(false)
-    }
+  useEffect(()=>{ 
     getData()
   }, [])
 
@@ -53,20 +60,33 @@ export default function Page() {
 
   }, [fetchData])
 
+  async function handleError(){
+    setError (false)
+    await getData()
+  }
+
+  
+  useEffect  (()=>{
+    console.log (error)
+  }, [error])
+
+
   return (<main className="p-4">
-    <Searchbar></Searchbar>
+    <Searchbar search={fetchData} reinitialize ={setItems}></Searchbar>
     <ul>
-      {items.map((i:Random|undefined, index)=>{
+      {items.map((i:Random|undefined)=>{
         if (i){
           return <li className="mb-6" key={i.id}>
           <Photocard photo={i}></Photocard>
           </li>
-        }else{
-          return <p key={index} className="text-center">Misy blem an! mbola tsisy mesure mipetraka fa ndana ataovy reload le page</p>
         }
       })}
     </ul>
-    {isLoading && <div className="flex justify-center"><Spinner className="mx-auto"></Spinner></div>}
+    {error && <div className="flex flex-col justify-center items-center gap-2 mt-16">
+      <p>Oups! An error occured</p>
+      <Button startContent={<IconRotate></IconRotate>} variant="bordered" onClick={handleError}>reload</Button>
+      </div>}
+    {isLoading && !error && <div className="flex justify-center"><Spinner className="mx-auto"></Spinner></div>}
   </main>
   )
 }
