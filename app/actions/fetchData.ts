@@ -29,7 +29,7 @@ export async function fetchList (query: string, page: number){
     try{
         let response
         if (query == ''){
-            response = await unsplash.photos.getRandom({count: 2}, {cache: 'no-store'})
+            response = await unsplash.photos.getRandom({count: 4}, {cache: 'no-store'})
             if (response.errors){
                 throw new Error (response.errors[0])
             }else{
@@ -39,7 +39,7 @@ export async function fetchList (query: string, page: number){
                 return data;
             }
         }else{
-            response = await unsplash.search.getPhotos({query: query, perPage: 2, page:  page})
+            response = await unsplash.search.getPhotos({query: query, perPage: 4, page:  page})
             if (response.errors){
                 throw new Error (response.errors[0])
             }else{

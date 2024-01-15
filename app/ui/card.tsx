@@ -44,7 +44,7 @@ export function Photocard (props:{photo:Random}){
         <CardBody>
             <h1 className="mb-4">{capitalize(props.photo.alt_description? props.photo.alt_description: '_')}</h1>
             <section className="flex flex-col gap-4">
-                <ButtonGroup isDisabled={loading} color="primary" className="justify-start">
+                <ButtonGroup isDisabled={loading} color="primary" className="justify-end ">
                 <Button isLoading={loading} onClick={downloadPhoto}>Download</Button>
                     <Dropdown>
                         <DropdownTrigger>
