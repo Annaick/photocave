@@ -4,10 +4,9 @@ export async function download(Name: string, Url: string){
     const url = Url
 
     await fetch (url, {method: 'GET'})
-    .then (response => response.arrayBuffer())
+    .then (response => response.blob())
     .then ((data)=>{
-        const blob = new Blob([data])
-        const downloadURL = URL.createObjectURL(blob)
+        const downloadURL = URL.createObjectURL(data)
         const link = document.createElement('a')
         link.href = downloadURL
         link.setAttribute('download', name)
