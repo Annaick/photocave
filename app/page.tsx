@@ -7,36 +7,34 @@ import { Button, Spinner } from "@nextui-org/react"
 import { fetchList } from "./actions/fetchData"
 import { Random } from "unsplash-js/dist/methods/photos/types"
 import { IconRotate } from "@tabler/icons-react"
-import { SearchParams } from "unsplash-js/dist/methods/search"
 import { useSearchParams } from "next/navigation"
 
 
 export default function Page() {
+  const searchParams = useSearchParams()
+
+  const [query, setQuery] = useState (searchParams.get('query'))
   const [items, setItems] = useState ([])
   const [isLoading, setIsLoading] = useState (false)
   const [error, setError] = useState (false)
-  const [index, setIndex] = useState (1)
+  const [index, setIndex] = useState (3)
 
-  const searchParams = useSearchParams()
-
-
-  const fetchData = useCallback(async()=>{
-    const search = searchParams.get('query') || undefined
-    if (isLoading) return;
-    setIsLoading(true)
-
-    let images: any = await fetchList(search).catch (()=>{setError(true)})
-    console.log (images)
-    setItems(items.concat(images))
-    setIndex(index + 1)
-    setIsLoading(false)
-  }, [index, isLoading])
-
+  useEffect (()=>{
+    setIndex (1)
+    setItems([])
+    getData()
+  }, [query])
+  
   const getData = async ()=>{
-    const search = searchParams.get('query') || undefined
+    if (isLoading) return  
+    const search = query || ''
     setIsLoading (true)
-    let images: any = await fetchList(search).catch (()=>{setError(true)})
-    setItems(items.concat(images))
+
+    let images: any = await fetchList(search, index).catch (()=>{setError(true)})
+
+    setItems(prev=>prev.concat(images))
+    setIndex(index + 1)
+
     setIsLoading(false)
   }
 
@@ -49,7 +47,7 @@ export default function Page() {
     const handleScroll = ()=>{
       const {scrollTop, clientHeight, scrollHeight} = document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight - 20){
-        fetchData()
+        getData()
       }
     }
 
@@ -58,7 +56,7 @@ export default function Page() {
       window.removeEventListener('scroll', handleScroll)
     }
 
-  }, [fetchData])
+  }, [getData])
 
   async function handleError(){
     setError (false)
@@ -72,7 +70,7 @@ export default function Page() {
 
 
   return (<main className="p-4">
-    <Searchbar search={fetchData} reinitialize ={setItems}></Searchbar>
+    <Searchbar setQuery={setQuery}></Searchbar>
     <ul>
       {items.map((i:Random|undefined)=>{
         if (i){

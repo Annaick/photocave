@@ -24,21 +24,37 @@ export type photo={
 
 
 
-export async function fetchList (query?: string){
-    revalidatePath('/')
+export async function fetchList (query: string, page: number){
+    revalidatePath('/**')
     try{
-        const response = await unsplash.photos.getRandom({count: 10, query: query })
-        if (response.errors){
-            throw new Error (response.errors[0])
+        let response
+        if (query == ''){
+            response = await unsplash.photos.getRandom({count: 2}, {cache: 'no-store'})
+            if (response.errors){
+                throw new Error (response.errors[0])
+            }else{
+                revalidatePath('/**')
+                const data = response.response
+                console.log (data)
+                return data;
+            }
         }else{
-            const data = response.response
-            return data;
+            response = await unsplash.search.getPhotos({query: query, perPage: 2, page:  page})
+            if (response.errors){
+                throw new Error (response.errors[0])
+            }else{
+                revalidatePath('/**')
+                
+                const data = response.response.results
+                console.log (data)
+                return data;
+            }
         }
     }catch (error){
         return new Error ('Error: ' + error)
     }
     finally{
-        revalidatePath('/')
+        revalidatePath('/**')
     }
 }
 
