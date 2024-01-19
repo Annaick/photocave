@@ -39,10 +39,14 @@ export function Photocard (props:{photo:Random}){
                 <p className="text-xs">by <span className="underline">{props.photo.user.name}</span></p>
                 
             </div>
-            <Image fetchPriority="high" src={props.photo.urls.small} alt={props.photo.alt_description? props.photo.alt_description: ''}></Image>
+            <div className="h-[250px] overflow-hidden rounded-lg">
+                <Image fetchPriority="high" src={props.photo.urls.small} alt={props.photo.alt_description? props.photo.alt_description: ''}></Image>
+            </div>
         </CardHeader>
         <CardBody>
-            <h1 className="mb-4">{capitalize(props.photo.alt_description? props.photo.alt_description: '_')}</h1>
+            <div className="h-[4rem] overflow-y-auto mb-4">
+                <h1 className="mb-4">{capitalize(props.photo.alt_description? props.photo.alt_description: '_')}</h1>
+            </div>
             <section className="flex flex-col gap-4">
                 <ButtonGroup isDisabled={loading} color="primary" className="justify-end ">
                 <Button isLoading={loading} onClick={downloadPhoto}>Download</Button>

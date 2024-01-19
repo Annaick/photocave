@@ -69,7 +69,7 @@ export default function Home() {
 
   return (<main className="p-4">
     <Searchbar setQuery={setQuery}></Searchbar>
-    <ul>
+    <ul className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
       {items.map((i:Random|undefined)=>{
         if (i){
           return <li className="mb-6" key={nanoid(12)}>
