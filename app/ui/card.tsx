@@ -5,6 +5,7 @@ import { Random } from "unsplash-js/dist/methods/photos/types"
 import { triggerDownload } from "../actions/fetchData"
 import { useEffect, useState } from "react"
 import { download } from "../actions/download"
+import Zoom from 'react-medium-image-zoom'
 
 const tsc = require ('string-to-color')
 const capitalize = (string: string)=> string[0].toUpperCase() + string.slice(1)
@@ -39,7 +40,7 @@ export function Photocard (props:{photo:Random}){
                 <p className="text-xs">by <span className="underline">{props.photo.user.name}</span></p>
                 
             </div>
-            <div className="h-[250px] overflow-hidden rounded-lg">
+            <div className="md:h-[250px] md:overflow-hidden rounded-lg">
                 <Image fetchPriority="high" src={props.photo.urls.small} alt={props.photo.alt_description? props.photo.alt_description: ''}></Image>
             </div>
         </CardHeader>

@@ -40,7 +40,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={selectedMode?'dark' :'light'}>
-      <body className={inter.className}>
+      <body className={`${inter.className} max-w-[1500px]`}>
           <Navbar>
             <NavbarBrand>
               .photocave
