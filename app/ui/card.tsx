@@ -40,7 +40,7 @@ export function Photocard (props:{photo:Random}){
                 <p className="text-xs">by <span className="underline">{props.photo.user.name}</span></p>
                 
             </div>
-            <div className="md:h-[250px] md:overflow-hidden rounded-lg">
+            <div className="flex justify-center items-center h-[250px] overflow-hidden rounded-lg">
                 <Image fetchPriority="high" src={props.photo.urls.small} alt={props.photo.alt_description? props.photo.alt_description: ''}></Image>
             </div>
         </CardHeader>
