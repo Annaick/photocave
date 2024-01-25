@@ -44,7 +44,7 @@ export default function Home() {
   useEffect(()=>{
     const handleScroll = ()=>{
       const {scrollTop, clientHeight, scrollHeight} = document.documentElement;
-      if (scrollTop + clientHeight >= scrollHeight - 20){
+      if (scrollTop + clientHeight >= scrollHeight - 60){
         getData()
       }
     }
